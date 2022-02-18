@@ -11,29 +11,29 @@ namespace Alura.Loja.Testes.ConsoleApp
         static void Main(string[] args)
         {
             //GravarUsandoAdoNet();
-            //GravarUsandoEntity();
-            //RecuperarProdutos();
+            GravarUsandoEntity();
+            RecuperarProdutos();
             //ExcluirProdutos();
             //RecuperarProdutos();
-            AtualizarProduto();
+
         }
 
 
         private static void ExcluirProdutos()
         {
-            using (var repo = new LojaContext())
+            using (var repo = new ProdutoDAOEntity())
             {
-                List<Produto> produtos = repo.Produtos.ToList();
-                produtos.ForEach((Produto item) => { repo.Produtos.Remove(item); });
-                repo.SaveChanges();
+                List<Produto> produtos = (List<Produto>)repo.Produtos();
+                produtos.ForEach((Produto item) => { repo.Remover(item); });
+               
             }
         }
 
         private static void RecuperarProdutos()
         {
-            using (var repo = new LojaContext())
+            using (var repo = new ProdutoDAOEntity())
             {
-                List<Produto> produtos = repo.Produtos.ToList();
+                List<Produto> produtos = (List<Produto>)repo.Produtos();
                 Console.WriteLine("Foram encontrados {0} produto(s)", produtos.Count);
                 produtos.ForEach((Produto produto) => { Console.WriteLine(produto.Nome); });
                 Console.ReadKey();
@@ -45,12 +45,11 @@ namespace Alura.Loja.Testes.ConsoleApp
             GravarUsandoEntity();
             RecuperarProdutos();
             //Update Product
-            using (var repo = new LojaContext())
+            using (var repo = new ProdutoDAOEntity())
             {
-                Produto primeiro = repo.Produtos.First();
+                Produto primeiro = repo.Produtos().First();
                 primeiro.Nome = "Harry Potter Editado";
-                repo.Produtos.Update(primeiro);
-                repo.SaveChanges();
+                repo.Atualizar(primeiro);
             }
 
 
@@ -64,21 +63,11 @@ namespace Alura.Loja.Testes.ConsoleApp
             p1.Categoria = "Livros";
             p1.Preco = 19.89;
 
-            Produto p2 = new Produto();
-            p2.Nome = "Senhor dos Anéis 1";
-            p2.Categoria = "Livros";
-            p2.Preco = 19.89;
 
-            Produto p3 = new Produto();
-            p3.Nome = "O Monge e o Executivo";
-            p3.Categoria = "Livros";
-            p3.Preco = 19.89;
-
-
-            using (var contexto = new LojaContext())
+            using (var contexto = new ProdutoDAOEntity())
             {
-                contexto.Produtos.AddRange(p1, p2, p3);
-                contexto.SaveChanges();
+                contexto.Adicionar(p1);
+              
             }
         }
 
